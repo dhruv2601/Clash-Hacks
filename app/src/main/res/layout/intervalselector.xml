@@ -1,46 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <ScrollView
-         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_gravity="center">
-
-<LinearLayout
-    android:id="@+id/intervalLinLayout"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:background="#000000"
-    android:gravity="center"
-    android:orientation="vertical" >
-        <com.quackware.gifdroid.ui.views.ForcedVideoView
+    android:layout_height="fill_parent"
+    android:layout_gravity="center">
+
+    <LinearLayout
+        android:id="@+id/intervalLinLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#000000"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <datapole.giftest.ui.views.ForcedVideoView
             android:id="@+id/videoview"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_gravity="center_horizontal|center_vertical" 
-            android:layout_weight="1">
-        </com.quackware.gifdroid.ui.views.ForcedVideoView>
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_weight="1"></datapole.giftest.ui.views.ForcedVideoView>
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="2"
             android:background="#FFFFFF"
             android:baselineAligned="false"
             android:gravity="center"
-            android:orientation="vertical" 
-            android:layout_weight="2">
+            android:orientation="vertical">
 
 
             <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
-                android:background="#000000" >
-				<com.quackware.gifdroid.util.RangeSeekBar
-            android:id="@+id/rangeSeekBar"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            >
-        </com.quackware.gifdroid.util.RangeSeekBar>
+                android:background="#000000">
+
+                <datapole.giftest.util.RangeSeekBar
+                    android:id="@+id/rangeSeekBar"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"></datapole.giftest.util.RangeSeekBar>
+
                 <ImageButton
                     android:id="@+id/pausePlayButton"
                     android:layout_width="wrap_content"
@@ -49,15 +49,14 @@
                     android:layout_marginTop="15dp"
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/playPause"
-                    android:src="@drawable/ic_music_play" >
-                </ImageButton>
+                    android:src="@drawable/ic_music_play"></ImageButton>
             </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:background="#FFFFFF"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <Button
                     android:id="@+id/intervalselector_preferences"
@@ -69,20 +68,19 @@
                     android:drawableLeft="@drawable/settings"
                     android:paddingLeft="20dp"
                     android:text="@string/editPrefs"
-                    android:textColor="#FFFFFF" >
-                </Button>
+                    android:textColor="#FFFFFF"></Button>
+
                 <Button
                     android:id="@+id/intervalselector_next"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
+                    android:layout_marginBottom="1dp"
                     android:background="#000000"
                     android:drawableLeft="@drawable/next_icon"
                     android:paddingLeft="20dp"
                     android:text="@string/next"
-                    android:textColor="#FFFFFF" 
-                    android:layout_marginBottom="1dp">
-                </Button>
+                    android:textColor="#FFFFFF"></Button>
             </LinearLayout>
         </LinearLayout>
-</LinearLayout>
-    </ScrollView>
+    </LinearLayout>
+</ScrollView>

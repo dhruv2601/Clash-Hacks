@@ -10,7 +10,7 @@ package datapole.giftest;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
-import com.quackware.gifdroid.encoder.AnimatedGifEncoder;
+import datapole.giftest.encoder.AnimatedGifEncoder;
 
 import android.graphics.Bitmap;
 

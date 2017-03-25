@@ -153,13 +153,15 @@ public class MainActivity extends Activity implements OnTouchListener {
                     Uri videoUri = data.getData();
                     String path = getPath(videoUri);
                     //Log.i(TAG,path);
+                    Log.d(TAG, "videoURL: " + videoUri);
+                    Log.d(TAG, "path: " + path);
                     if (path != null) {
                         if (path.equals("")) {
                             Toast.makeText(this, "Error retriving path", Toast.LENGTH_SHORT).show();
                             return;
                         }
                     } else {
-                        Toast.makeText(this, "Error retriving path", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Error retriving path111111", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     //Ok we have the path, thats all we really need so lets go ahead and pass it to CreatorActivity...
@@ -302,6 +304,7 @@ public class MainActivity extends Activity implements OnTouchListener {
         } catch (SecurityException e) {
             Log.e(TAG, "unable to write on the sd card " + e.toString());
         }
+
         if (mPath.exists()) {
             FilenameFilter filter = new FilenameFilter() {
                 @Override

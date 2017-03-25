@@ -13,9 +13,9 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import com.quackware.gifdroid.R;
-import com.quackware.gifdroid.encoder.AnimatedGifEncoder;
-import com.quackware.gifdroid.util.Donate;
+import datapole.giftest.R;
+import datapole.giftest.encoder.AnimatedGifEncoder;
+import datapole.giftest.util.Donate;
 
 //import org.jiggawatt.giffle.Giffle;
 

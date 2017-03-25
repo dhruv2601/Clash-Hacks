@@ -9,7 +9,7 @@ package datapole.giftest.util;
 
 import java.math.BigDecimal;
 
-import com.quackware.gifdroid.R;
+import datapole.giftest.R;
 
 import android.content.Context;
 import android.graphics.Bitmap;

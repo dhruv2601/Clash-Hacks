@@ -7,9 +7,9 @@
  ******************************************************************************/
 package datapole.giftest.util;
 
-import com.quackware.gifdroid.ui.ImageAdapter;
-import com.quackware.gifdroid.ui.FrameSelectorActivity.FrameGrabberTask;
-import com.quackware.gifdroid.ui.FrameSelectorActivity.GifCreatorTask;
+import datapole.giftest.ui.ImageAdapter;
+import datapole.giftest.ui.FrameSelectorActivity.FrameGrabberTask;
+import datapole.giftest.ui.FrameSelectorActivity.GifCreatorTask;
 
 public class MyDataStore {
 	

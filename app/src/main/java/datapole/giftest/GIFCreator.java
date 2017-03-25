@@ -9,7 +9,7 @@ package datapole.giftest;
 
 import java.util.ArrayList;
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
-import com.quackware.gifdroid.util.GIFPrep;
+import datapole.giftest.util.GIFPrep;
 
 import android.content.Context;
 import android.graphics.Bitmap;

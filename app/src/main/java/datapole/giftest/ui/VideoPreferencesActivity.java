@@ -7,8 +7,8 @@
  ******************************************************************************/
 package datapole.giftest.ui;
 
-import com.quackware.gifdroid.R;
-import com.quackware.gifdroid.util.Compatibility;
+import datapole.giftest.R;
+import datapole.giftest.util.Compatibility;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -72,5 +72,4 @@ public class VideoPreferencesActivity extends PreferenceActivity {
 			((ListPreference)findPreference("listPreferenceHeight")).setDefaultValue("" + height*.1);
 		}
 	}
-
 }

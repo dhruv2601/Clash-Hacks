@@ -59,7 +59,8 @@ public class IntervalSelectorActivity extends Activity{
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.intervalselector);
-		
+
+		Log.d(TAG,"setContentViewALLSET");
 		Bundle extras = getIntent().getExtras();
 		if(extras != null)
 		{
