@@ -70,4 +70,4 @@ def symmetric_sentence_similarity(sentence1, sentence2):
 	return (sentence_similarity(sentence1, sentence2))
  
 
-# print(symmetric_sentence_similarity("get lost", "I like the sound of that, yeah"))
+# print(symmetric_sentence_similarity("I promised I'd be true and love only you ", "we are in hell"))
