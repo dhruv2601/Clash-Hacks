@@ -4,12 +4,12 @@ from collections import Counter
 from nltk.corpus import stopwords
 import random
 
-# stop = set(stopwords.words('english'))
+stop = set(stopwords.words('english'))
 
 def ExtractCertainArtists():
 	artists = Counter()
 	df = pd.read_csv("songdata.csv")
-	target_artists = ["Eminem", "Dean Martin", "Pink Floyd", "Kanye West", "Snoop Dogg", "Wiz Khalifa"]
+	target_artists = ["Eminem", "Dean Martin", "Pink Floyd", "Queen", "Ed Sheeran", "Linkin Park"]
 
 	for thing in df.itertuples():
 		try:
@@ -38,7 +38,7 @@ def preProcessSongs():
 		lyric = thing[4]
 		lyrics = lyric.split("\n")
 		random.shuffle(lyrics)
-		processedLyrics = "\n".join(list(filter(lambda lyric: (10 <= len(TextBlob(lyric).words) <= 12), lyrics))[:4])
+		processedLyrics = "\n".join(list(filter(lambda lyric: (10 <= len(TextBlob(lyric).words) <= 12), lyrics))[:5])
 		pls.append(processedLyrics)
 	df["text"] = pls
 	df.to_csv("extractedArtists.csv", index=False)

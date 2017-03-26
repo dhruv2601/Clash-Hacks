@@ -1,6 +1,10 @@
 import pandas as pd
 from similarity import symmetric_sentence_similarity
+# from nltk.corpus import stopwords
 import random
+from optimise_similarity import lcs
+
+# stop = set(stopwords.words('english'))
 
 def getMatch(sentence, things):
 	best = -10000000
@@ -23,9 +27,9 @@ def pick(sentense):
 	df = pd.read_csv("extractedArtists.csv")
 	df = df.sample(frac=1)
 	for song in df.itertuples():
-		if len(bestMatch) > 15:
-			random.shuffle(bestMatch)
-			break
+		# if len(bestMatch) > 10:
+		# 	random.shuffle(bestMatch)
+		# 	break
 		try:
 			lyrics = song[4].split("\n")
 			song_name = song[2]
@@ -39,10 +43,17 @@ def pick(sentense):
 				bestMatch.append(dict_obj_match)
 		except Exception as e:
 			pass
-	return(bestMatch[:3])
+
+	if bestMatchScore > 0.6:
+		best = max(bestMatch, key=lambda x:lcs(x["lyric_match"], sentense))
+		import pprint
+		pprint.pprint(best)
+		return([best])
+	else:
+		return None
 
 
 
 
 if __name__ == '__main__':
-	print(pick("Do your own work do not disturb"))
+	print(pick("search me in heaven"))
