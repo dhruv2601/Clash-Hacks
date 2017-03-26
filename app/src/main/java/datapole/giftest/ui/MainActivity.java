@@ -11,6 +11,10 @@ package datapole.giftest.ui;
 import java.io.File;
 import java.io.FilenameFilter;
 
+import at.huber.youtubeExtractor.VideoMeta;
+import at.huber.youtubeExtractor.YouTubeExtractor;
+import at.huber.youtubeExtractor.YtFile;
+import datapole.giftest.HttpHandler;
 import datapole.giftest.R;
 import datapole.giftest.util.Compatibility;
 import datapole.giftest.util.Donate;
@@ -21,18 +25,26 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
+import android.app.DownloadManager;
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,7 +52,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 // /mnt/sdcard/dcim/Camera/
 
@@ -57,52 +74,68 @@ public class MainActivity extends Activity implements OnTouchListener {
 
     private static final String TAG = "MainActivity";
 
-    /**
-     * Called when the activity is first created.
-     */
+    private ProgressBar mainProgressBar;
+    public String jsonUber;
+
+    public String enteredString = "Wanna climb out of hell";
+    String lyrics[] = new String[3];
+    String song[] = new String[3];
+    String artist[] = new String[3];
+    String ytrl[] = new String[3];
+
+    public String videoPath;
+    DownloadManager manager;
+    private long enqueue;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        setupButtonClickListeners();
-        checkForEnabledStorage();
-        Compatibility.checkCompatibility(this);
-        //set auto
-        initiateErrorReporter();
-        showPopup();
-    }
 
-
-    private void showPopup() {
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean showPopup = prefs.getBoolean("checkPreferenceShowPopup", true);
-        if (showPopup) {
-            Builder builder = new Builder(this);
-            builder.setTitle(getString(R.string.greetTitle));
-            if (Donate.isDonate(this)) {
-                builder.setMessage(getString(R.string.greetMessageAndDonate));
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+//        clipboard.setText("Text to copy");
+        String temp = (String) clipboard.getText();
+        for (int i = 0; i < temp.length(); i++) {
+            if (temp.charAt(i) == ' ') {
+                enteredString += "%20";
             } else {
-                builder.setMessage(getString(R.string.greetMessage));
+                enteredString += temp.charAt(i);
             }
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    //Nothing needs to be here.
-                }
-            });
-            builder.setNegativeButton("Never Show Again", new DialogInterface.OnClickListener() {
-
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putBoolean("checkPreferenceShowPopup", false);
-                    editor.commit();
-
-                }
-            });
-            builder.create().show();
         }
+
+        new getMatches().execute();
+
+//       ------------------>> ye vala code aayega on dowload ke result mn
+
+//        Intent intent = new Intent(this, IntervalSelectorActivity.class);
+//        intent.putExtra("videoPath", path);
+//        startActivity(intent);
+
+//          ----------------->>>>>>>>>>>>>>>>.
+
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
+                    long download = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
+                    DownloadManager.Query query = new DownloadManager.Query();
+                    query.setFilterById(enqueue);
+                    Cursor c = manager.query(query);
+                    if (c.moveToFirst()) {
+                        int coloumnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
+                        if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(coloumnIndex)) {
+                            String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+                            videoPath = uriString;
+                            //  --------------->>>>>>>>>>>>>>>>       THIS IS THE DOWNLOADED AUDIO URI       <<<<<<<------
+                        }
+                    }
+                }
+            }
+        };
+
+        registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
     }
 
     @Override
@@ -130,7 +163,6 @@ public class MainActivity extends Activity implements OnTouchListener {
         }
     }
 
-
     private void setupButtonClickListeners() {
         //Button exitButton = (Button)findViewById(R.id.exit);
         //exitButton.setOnClickListener(this);
@@ -138,8 +170,6 @@ public class MainActivity extends Activity implements OnTouchListener {
         ((Button) findViewById(R.id.selectVideo)).setOnTouchListener(this);
         ((Button) findViewById(R.id.recordVideo)).setOnTouchListener(this);
         ((Button) findViewById(R.id.viewGallery)).setOnTouchListener(this);
-
-
     }
 
     @Override
@@ -366,5 +396,134 @@ public class MainActivity extends Activity implements OnTouchListener {
         }
         dialog = builder.create();
         return dialog;
+    }
+
+    private void getYoutubeDownloadUrl(String youtubeLink) {
+        new YouTubeExtractor(this) {
+
+            @Override
+            public void onExtractionComplete(SparseArray<YtFile> ytFiles, VideoMeta vMeta) {
+                mainProgressBar.setVisibility(View.GONE);
+
+                if (ytFiles == null) {
+                    // Something went wrong we got no urls. Always check this.
+                    finish();
+                    return;
+                }
+                // Iterate over itags
+                for (int i = 0, itag; i < ytFiles.size(); i++) {
+                    itag = ytFiles.keyAt(i);
+                    // ytFile represents one file with its url and meta data
+                    YtFile ytFile = ytFiles.get(itag);
+
+                    // Just add videos in a decent format => height -1 = audio
+                    if (ytFile.getFormat().getHeight() == -1 || ytFile.getFormat().getHeight() >= 360) {
+                        addButtonToMainLayout(vMeta.getTitle(), ytFile);
+                    }
+                }
+            }
+        }.extract(youtubeLink, true, false);
+    }
+
+    private void addButtonToMainLayout(final String videoTitle, final YtFile ytfile) {
+        // Display some buttons and let the user choose the format
+        String btnText = (ytfile.getFormat().getHeight() == -1) ? "Audio " +
+                ytfile.getFormat().getAudioBitrate() + " kbit/s" :
+                ytfile.getFormat().getHeight() + "p";
+        btnText += (ytfile.getFormat().isDashContainer()) ? " dash" : "";
+        Button btn = new Button(this);
+        btn.setText(btnText);
+        btn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                String filename;
+                if (videoTitle.length() > 55) {
+                    filename = videoTitle.substring(0, 55) + "." + ytfile.getFormat().getExt();
+                } else {
+                    filename = videoTitle + "." + ytfile.getFormat().getExt();
+                }
+                filename = filename.replaceAll("\\\\|>|<|\"|\\||\\*|\\?|%|:|#|/", "");
+                downloadFromUrl(ytfile.getUrl(), videoTitle, filename);
+                finish();
+            }
+        });
+//        mainLayout.addView(btn);
+    }
+
+    private void downloadFromUrl(String youtubeDlUrl, String downloadTitle, String fileName) {
+        Uri uri = Uri.parse(youtubeDlUrl);
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+        request.setTitle(downloadTitle);
+
+        request.allowScanningByMediaScanner();
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+
+        manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+        enqueue = manager.enqueue(request);
+    }
+
+
+    private class getMatches extends AsyncTask<Void, Void, Void> {
+        HttpHandler sh = new HttpHandler();
+        String reqUrl;
+        String reqOlaUrl;
+        JSONObject jsonObject;
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = new ProgressDialog(MainActivity.this);
+            progressDialog.setTitle("Loading");
+            progressDialog.setMessage("Matching emotions...");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            reqUrl = "http://192.168.2.207:5000/getMatch?sent=" + enteredString;     //enteredString;  // check  that last one could be of the format ->> sent=I%20wanna%20fuck%20you
+//            reqOlaUrl = "https://devapi.olacabs.com/v1/products?pickup_lat=12.9491416&pickup_lng=77.64298&category=mini";
+            jsonUber = sh.makeServiceCall(reqUrl);
+//            jsonOla = sh.makeServiceCall(reqOlaUrl);
+
+            Log.d(TAG, "jsonConcept" + jsonUber);
+
+            try {
+                JSONArray array = new JSONArray(jsonUber);
+//                jsonObject = new JSONObject(jsonUber);
+
+                for (int i = 0; i < 3; i++) {
+                    JSONObject price = array.getJSONObject(i);
+                    String x = price.getString("ytURL");
+                    ytrl[i] = x;
+                    String y = price.getString("lyric_match");
+                    lyrics[i] = y;
+                    String z = price.getString("song");
+                    song[i] = z;
+                    String z1 = price.getString("artist");
+                    artist[i] = z1;
+
+                    Log.d(TAG, "price:: " + price);
+                    Log.d(TAG, "xxxx::: " + x);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            progressDialog.dismiss();
+
+            // run the below command three times with differnet callbacks
+
+// ----------->>>>>>>>>>>>>>>>>>>>>>>>           getYoutubeDownloadUrl(youtubeLink);     // response mn aayega youtube link   <<<<<<<<<<--------------
+            getYoutubeDownloadUrl(ytrl[0]);
+            super.onPostExecute(aVoid);
+        }
     }
 }

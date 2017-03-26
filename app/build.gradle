@@ -25,6 +25,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.3.0'
+    compile 'com.github.HaarigerHarald:android-youtubeExtractor:master-SNAPSHOT'
+
     testCompile 'junit:junit:4.12'
     compile files('/home/dhruv/AndroidStudioProjects/GIFTest/libs/javacpp.jar')
     compile files('/home/dhruv/AndroidStudioProjects/GIFTest/libs/javacv.jar')
