@@ -74,6 +74,7 @@ public class AnimatedGifEncoder {
      * color has been set, otherwise 2.
      * @param code int disposal code.
      */
+
     public void setDispose(int code) {
         if (code >= 0) {
             dispose = code;

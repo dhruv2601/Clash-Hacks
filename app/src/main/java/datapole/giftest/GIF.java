@@ -78,11 +78,11 @@ public class GIF {
 	{
 		if(width == -1)
 		{
-			width = 780;
+			width = 360;
 		}
 		if(height == -1)
 		{
-			height = 420;
+			height = 240;
 		}
 		
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
