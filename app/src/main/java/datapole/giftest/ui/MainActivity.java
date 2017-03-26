@@ -142,7 +142,6 @@ public class MainActivity extends Activity implements OnTouchListener {
 
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {

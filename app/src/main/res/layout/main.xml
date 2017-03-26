@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   Copyright (c) 2012 Curtis Larson (QuackWare).
   All rights reserved. This program and the accompanying materials
   are made available under the terms of the GNU Public License v3.0
@@ -7,23 +6,44 @@
   http://www.gnu.org/licenses/gpl.html
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:orientation="vertical" android:background="#FFFFFF">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
 
-	<Button android:text="@string/selectVideo" android:id="@+id/selectVideo"
-		android:layout_width="fill_parent" android:layout_height="fill_parent"
-		android:layout_weight="1" android:drawableLeft="@drawable/ic_select_video"
-		android:background="#000000" android:textColor="#FFFFFF"
-		android:paddingLeft="20dp" android:layout_margin="1dp">
-	</Button>
-	<Button android:id="@+id/recordVideo" android:layout_width="fill_parent"
-		android:layout_height="fill_parent" android:layout_weight="1"
-		android:drawableLeft="@drawable/ic_record" android:background="#000000"
-		android:text="@string/recordVideo" android:textColor="#FFFFFF"
-		android:paddingLeft="20dp" android:layout_margin="1dp">  </Button>
-	<Button android:id="@+id/viewGallery" android:layout_width="fill_parent"
-		android:layout_height="fill_parent" android:layout_weight="1"
-		android:drawableLeft="@drawable/ic_launcher" android:background="#000000"
-		android:text="@string/viewGallery" android:textColor="#FFFFFF"
-		android:paddingLeft="20dp" android:layout_margin="1dp" ></Button>
+    <Button
+        android:id="@+id/selectVideo"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#000000"
+        android:drawableLeft="@drawable/ic_select_video"
+        android:paddingLeft="20dp"
+        android:text="@string/selectVideo"
+        android:textColor="#FFFFFF"></Button>
+
+    <Button
+        android:id="@+id/recordVideo"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#000000"
+        android:drawableLeft="@drawable/ic_record"
+        android:paddingLeft="20dp"
+        android:text="@string/recordVideo"
+        android:textColor="#FFFFFF"></Button>
+
+    <Button
+        android:id="@+id/viewGallery"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#000000"
+        android:drawableLeft="@drawable/ic_launcher"
+        android:paddingLeft="20dp"
+        android:text="@string/viewGallery"
+        android:textColor="#FFFFFF"></Button>
 </LinearLayout>
